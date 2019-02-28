@@ -12,6 +12,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.5.1/chosen.jquery.min.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Taviraj" rel="stylesheet">
 
+
+
     <style>
         #surveyHeader {
     background-color: #9E02CA;
@@ -47,6 +49,10 @@
 .chosen-select {
     margin-bottom: 10px;
     
+}
+
+#userMatchImage {
+    max-width: 300px;
 }
 
 /* body {
@@ -134,7 +140,7 @@
                 <option value="5">5 (Strongly Agree)</option>
             </select>
             &nbsp;
-
+            
             <div class="questionBackdrop">
                 <h3><strong>Question 5</strong></h3>
                 <h4>People can rarely upset you.</h4>
@@ -248,66 +254,68 @@
             $(document).ready(function () {
                 $("#resultsModal").hide();
 
-                $('select').material_select();
-                $('.modal').modal({
-                    dismissible: false, // Modal can be dismissed by clicking outside of the modal
-                    opacity: .5, // Opacity of modal background
-                    inDuration: 300, // Transition in duration
-                    outDuration: 200, // Transition out duration
-                    startingTop: '4%', // Starting top style attribute
-                    endingTop: '10%' // Ending top style attribute
+                //     $('select').material_select();
+                //     $('.modal').modal({
+                //         dismissible: false, // Modal can be dismissed by clicking outside of the modal
+                //         opacity: .5, // Opacity of modal background
+                //         inDuration: 300, // Transition in duration
+                //         outDuration: 200, // Transition out duration
+                //         startingTop: '4%', // Starting top style attribute
+                //         endingTop: '10%' // Ending top style attribute
+                //     });
+
+
+
+                $("#submitButton").on("click", function (event) {
+                    event.preventDefault();
+                    $("#resultsModal").show();
+
+                    function validateForm() {
+                        var isValid = true;
+                        $(".form-control").each(function () {
+                            if ($(this).val() === "") {
+                                isValid = false;
+                            }
+                        });
+                        $(".chosen-select").each(function () {
+
+                            if ($(this).val() === "") {
+                                isValid = false;
+                            }
+                        });
+                        return isValid;
+                    }
+
+                    if (validateForm()) {
+                        var userInput = {
+                            name: $("#name").val().trim(),
+                            photo: $("#photo").val().trim(),
+                            scores: [
+                                $("#q1").val().trim(),
+                                $("#q2").val().trim(),
+                                $("#q3").val().trim(),
+                                $("#q4").val().trim(),
+                                $("#q5").val().trim(),
+                                $("#q6").val().trim(),
+                                $("#q7").val().trim(),
+                                $("#q8").val().trim(),
+                                $("#q9").val().trim(),
+                                $("#q10").val().trim()
+                            ]
+                        };
+
+                        $.post('/api/friends', userInput, function (data) {
+                            $("#userMatchName").text(data.name);
+                            $("#userMatchImage").attr("src", data.photo);
+
+                            $("#resultsModal").modal("open");
+                            console.log(res);
+                        });
+                    } else {
+                        alert("Please answer all questions before submitting")
+                    }
+
                 });
-            });
-
-
-            $("#submitButton").on("click", function (event) {
-                event.preventDefault();
-                $("#resultsModal").show();
-
-                function validateForm() {
-                    var isValid = true;
-                    $(".form-control").each(function () {
-                        if ($(this).val() === "") {
-                            isValid = false;
-                        }
-                    });
-                    $(".chosen-select").each(function () {
-
-                        if ($(this).val() === "") {
-                            isValid = false;
-                        }
-                    });
-                    return isValid;
-                }
-
-                if (validateForm()) {
-                    var userInput = {
-                        name: $("#name").val().trim(),
-                        photo: $("photo").val().trim(),
-                        scores: [
-                            $("q1").val().trim(),
-                            $("q2").val().trim(),
-                            $("q3").val().trim(),
-                            $("q4").val().trim(),
-                            $("q5").val().trim(),
-                            $("q6").val().trim(),
-                            $("q7").val().trim(),
-                            $("q8").val().trim(),
-                            $("q9").val().trim(),
-                            $("q10").val().trim()
-                        ]
-                    };
-
-                    $.post('/api/friends', userInput, function (data) {
-                        $("userMatchName").text(data.name);
-                        $("#userMatchImage").attr("src", data.photo);
-
-                        $("resultsModal").modal("toggle");
-                    });
-                } else {
-                    alert("Please answer all questions before submitting")
-                }
-
             });
         </script>
 </body>
