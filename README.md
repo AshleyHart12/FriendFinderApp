@@ -1,5 +1,5 @@
 # FriendFinder
-https://ashleyhart12.github.io/FriendFinderApp/
+https://mighty-ravine-52151.herokuapp.com/
 
 <br>
 
