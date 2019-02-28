@@ -1,5 +1,5 @@
 # FriendFinder
-https://git.heroku.com/mighty-ravine-52151.git
+https://mighty-ravine-52151.herokuapp.com/
 
 <br>
 
